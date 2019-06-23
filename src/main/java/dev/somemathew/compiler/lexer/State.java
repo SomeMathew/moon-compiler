@@ -139,8 +139,8 @@ public class State {
         }
     }
 
-    public static final class SearchStub {
-        private int id;
+    static final class SearchStub {
+        private final int id;
 
         public SearchStub(int id) {
             this.id = id;
