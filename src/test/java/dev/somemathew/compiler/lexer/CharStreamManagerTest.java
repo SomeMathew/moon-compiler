@@ -6,8 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class CharStreamManagerTest {
@@ -21,7 +20,7 @@ class CharStreamManagerTest {
         charStreamManagerTestString = new CharStreamManager(TEST_STRING);
         charStreamManagerEmptyString = new CharStreamManager(EMPTY_STRING);
     }
-    
+
     @Test
     void peekCharReturnsTheSameCharWithNoForward() {
         char firstChar = charStreamManagerTestString.peekChar();
@@ -61,7 +60,31 @@ class CharStreamManagerTest {
     }
 
     @Test
-    void consumeChar() {
+    void givenMoreCharAvailableConsumeCharMovesTheHeadForward() {
+        boolean allCharsMatched = true;
+        int i = 0;
+        char peekedChar = '\0';
+        char expectedChar = '\0';
+        for (; i < TEST_STRING.length(); i++) {
+            peekedChar = charStreamManagerTestString.peekChar();
+            expectedChar = TEST_STRING.charAt(i);
+            if (peekedChar != expectedChar) {
+                allCharsMatched = false;
+                break;
+            }
+            charStreamManagerTestString.consumeChar();
+        }
+
+        assertTrue(allCharsMatched, String.format("The char %c at pos %d did not match %c.", expectedChar, i, peekedChar));
+    }
+
+    @Test
+    void givenACompleteStreamConsumeCharKeepsEOF() {
+        for (int i = 0; i < 5; i++) {
+            charStreamManagerEmptyString.consumeChar();
+        }
+
+        assertFalse(charStreamManagerEmptyString.peekToken().isPresent());
     }
 
     @Test
