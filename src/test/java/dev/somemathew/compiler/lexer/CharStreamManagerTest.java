@@ -1,6 +1,5 @@
 package dev.somemathew.compiler.lexer;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,25 +10,28 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CharStreamManagerTest {
     private static String TEST_STRING = "Test String";
+    private static String TEST_STRING_WITH_END_BLANKS = "TestString    ";
     private static String EMPTY_STRING = "";
 
     private CharStreamManager charStreamManagerTestString;
     private CharStreamManager charStreamManagerEmptyString;
+    private CharStreamManager charStreamManagerEndBlanks;
     @BeforeEach
     void setUp() {
         charStreamManagerTestString = new CharStreamManager(TEST_STRING);
         charStreamManagerEmptyString = new CharStreamManager(EMPTY_STRING);
+        charStreamManagerEndBlanks = new CharStreamManager(TEST_STRING_WITH_END_BLANKS);
     }
 
     @Test
-    void peekCharReturnsTheSameCharWithNoForward() {
+    void whenNotForwardedPeekCharReturnsTheSameChar() {
         char firstChar = charStreamManagerTestString.peekChar();
         char secondChar = charStreamManagerTestString.peekChar();
         assertEquals(firstChar, secondChar);
     }
 
     @Test
-    void peekCharReturnsTheNextCharWhenConsumed() {
+    void whenConsumedPeekCharReturnsTheNextChar() {
         char firstChar = charStreamManagerTestString.peekChar();
         charStreamManagerTestString.consumeChar();
         char secondChar = charStreamManagerTestString.peekChar();
@@ -39,7 +41,7 @@ class CharStreamManagerTest {
     }
 
     @Test
-    void peekCharReturnsTheNextCharWhenForwarded() {
+    void whenForwardedPeekCharReturnsTheNextChar() {
         char firstChar = charStreamManagerTestString.peekChar();
         charStreamManagerTestString.forward(1);
         char secondChar = charStreamManagerTestString.peekChar();
@@ -49,13 +51,13 @@ class CharStreamManagerTest {
     }
 
     @Test
-    void peekCharThrowsAnExceptionWhenStreamDone() {
+    void whenStreamIsCompletePeekCharThrowsAnException() {
         charStreamManagerTestString.forward(TEST_STRING.length());
         assertThrows(NoSuchElementException.class, charStreamManagerTestString::peekChar);
     }
 
     @Test
-    void peekCharThrowsAnExceptionGivenAnEmptyString() {
+    void givenAnEmptyStringPeekCharThrowsAnException() {
         assertThrows(NoSuchElementException.class, charStreamManagerEmptyString::peekChar);
     }
 
@@ -89,6 +91,24 @@ class CharStreamManagerTest {
 
     @Test
     void skipBlanks() {
+    }
+
+    @Test
+    void givenBlanksAfterHeadSkipBlanksAdvancesTheHeadToANonBlank() {
+        int blankIndex = TEST_STRING.indexOf(' ');
+        charStreamManagerTestString.forward(blankIndex);
+
+        charStreamManagerTestString.skipBlanks();
+        assertEquals(TEST_STRING.charAt(blankIndex + 1), charStreamManagerTestString.peekChar());
+    }
+
+    @Test
+    void givenBlanksToTheEndSkipsBlanksAdvancesToEOF() {
+        int blankIndex = TEST_STRING_WITH_END_BLANKS.indexOf(' ');
+        charStreamManagerEndBlanks.forward(blankIndex);
+
+        charStreamManagerEndBlanks.skipBlanks();
+        assertFalse(charStreamManagerEndBlanks.peekToken().isPresent());
     }
 
     @Test
