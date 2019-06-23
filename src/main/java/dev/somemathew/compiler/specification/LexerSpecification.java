@@ -1,6 +1,10 @@
-package dev.somemathew.compiler.lexer;
+package dev.somemathew.compiler.specification;
 
 import com.google.common.collect.ImmutableTable;
+import dev.somemathew.compiler.lexer.ControlSymbol;
+import dev.somemathew.compiler.lexer.ILexerSpecification;
+import dev.somemathew.compiler.lexer.State;
+import dev.somemathew.compiler.lexer.TokenType;
 
 import java.util.HashMap;
 import java.util.Map;

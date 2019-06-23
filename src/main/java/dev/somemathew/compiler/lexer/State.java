@@ -33,11 +33,11 @@ public class State {
         return isFinalState;
     }
 
-    TokenType getTokenType() {
+    public TokenType getTokenType() {
         return tokenType;
     }
 
-    int getBacktrackCount() {
+    public int getBacktrackCount() {
         return backTrackCount;
     }
 
@@ -45,15 +45,15 @@ public class State {
         return id;
     }
 
-    String getDescription() {
+    public String getDescription() {
         return description;
     }
 
-    static Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    static State nonFinal(int id) {
+    public static State nonFinal(int id) {
         return new Builder().id(id);
     }
 
@@ -114,27 +114,27 @@ public class State {
             this.description = null;
         }
 
-        Builder setFinal() {
+        public Builder setFinal() {
             this.isFinalState = true;
             return this;
         }
 
-        Builder ofType(TokenType type) {
+        public Builder ofType(TokenType type) {
             this.tokenType = type;
             return this;
         }
 
-        Builder withDescription(String desc) {
+        public Builder withDescription(String desc) {
             this.description = desc;
             return this;
         }
 
-        Builder withBacktrack() {
+        public Builder withBacktrack() {
             this.backTrackCount = 1;
             return this;
         }
 
-        State id(int id) {
+        public State id(int id) {
             return new State(id, backTrackCount, isFinalState, tokenType, description);
         }
     }
