@@ -20,7 +20,7 @@ class CharStreamManager {
     private int headColumn;
     private int head;
 
-    CharStreamManager(CharSequence text) {
+    public CharStreamManager(CharSequence text) {
         this.text = checkNotNull(text);
         reset();
     }
@@ -29,8 +29,9 @@ class CharStreamManager {
      * Peek the next character but does not advance the head.
      * 
      * @return the character at the head.
+     * @throws NoSuchElementException when stream is complete
      */
-    char peekChar() {
+    public char peekChar() {
         if (hasNext()) {
             return text.charAt(head);
         } else {
@@ -42,7 +43,7 @@ class CharStreamManager {
      * Advance the head. The character should be checked with peekChar() first if
      * necessary.
      */
-    void consumeChar() {
+    public void consumeChar() {
         if (hasNext()) {
             incrementHead();
         }
@@ -57,7 +58,7 @@ class CharStreamManager {
      * has been consumed.
      * 
      */
-    void skipBlanks() {
+    public void skipBlanks() {
         while (true) {
             if (!hasNext()) {
                 break;
